@@ -1,1 +1,549 @@
 # nandini-eswaran.github.io
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ThermoSense — Thermal Safety Intelligence for Two-Wheeler EVs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12162B;
+    --navy:#1B2340;
+    --navy-soft:#232C52;
+    --teal:#0EA5A4;
+    --teal-soft:#CFF5F1;
+    --teal-deep:#0B7F7E;
+    --amber:#F2994A;
+    --amber-soft:#FCE8D6;
+    --amber-deep:#C9701F;
+    --paper:#F7F9FB;
+    --slate:#64748B;
+    --line:#E2E8F0;
+    --white:#FFFFFF;
+
+    --serif: "Source Serif 4", Georgia, serif;
+    --sans: "Inter", -apple-system, Segoe UI, sans-serif;
+    --mono: "IBM Plex Mono", monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--sans);
+    color:var(--ink);
+    background:var(--white);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{display:block; max-width:100%;}
+  a{color:inherit; text-decoration:none;}
+  .wrap{max-width:1140px; margin:0 auto; padding:0 32px;}
+  section{padding:120px 0;}
+  @media (max-width:760px){ section{padding:72px 0;} .wrap{padding:0 22px;} }
+
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12.5px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    font-weight:500;
+  }
+  h1,h2,h3{font-family:var(--serif); font-weight:600; letter-spacing:-0.01em;}
+  h1{font-size:clamp(40px,6vw,68px); line-height:1.04; font-weight:700;}
+  h2{font-size:clamp(30px,4vw,42px); line-height:1.12;}
+  h3{font-size:20px; line-height:1.3;}
+  p{color:var(--slate);}
+  .lede{font-size:18px; line-height:1.6; max-width:640px;}
+
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:var(--sans); font-weight:600; font-size:14.5px;
+    padding:13px 24px; border-radius:8px;
+    border:1px solid transparent;
+    cursor:pointer; transition:transform .15s ease, opacity .15s ease;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn-primary{background:var(--teal); color:var(--ink);}
+  .btn-ghost{background:transparent; color:var(--white); border-color:rgba(255,255,255,0.28);}
+  .btn-ghost-dark{background:transparent; color:var(--ink); border-color:var(--line);}
+
+  /* ===== NAV ===== */
+  .nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(18,22,43,0.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .nav .wrap{display:flex; align-items:center; justify-content:space-between; height:64px;}
+  .nav-logo{font-family:var(--serif); font-weight:700; font-size:19px; color:var(--white);}
+  .nav-links{display:flex; gap:30px; font-size:13.5px; color:#B9C3E0;}
+  .nav-links a:hover{color:var(--white);}
+  @media (max-width:760px){ .nav-links{display:none;} }
+
+  /* ===== HERO ===== */
+  .hero{background:var(--ink); color:var(--white); padding:96px 0 40px;}
+  .hero .eyebrow{color:var(--teal); margin-bottom:18px;}
+  .hero h1{color:var(--white); margin-bottom:20px;}
+  .hero .lede{color:#AEB9DC; margin-bottom:36px;}
+  .hero-ctas{display:flex; gap:14px; margin-bottom:64px; flex-wrap:wrap;}
+
+  .chart-card{
+    background:var(--navy);
+    border-radius:16px;
+    padding:32px 32px 22px;
+    border:1px solid rgba(255,255,255,0.06);
+  }
+  .chart-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:18px; flex-wrap:wrap; gap:8px;}
+  .chart-head .label{font-family:var(--mono); font-size:12px; letter-spacing:0.08em; color:#8C9BC4; text-transform:uppercase;}
+  .chart-head .metric{font-family:var(--mono); font-size:13px; color:var(--teal);}
+  #driftSvg{width:100%; height:auto; display:block;}
+  .stage-row{display:flex; justify-content:space-between; margin-top:14px; font-family:var(--mono); font-size:11.5px; letter-spacing:0.04em; color:#5C6A93;}
+  .stage-row span{flex:1; text-align:center; transition:color .4s ease;}
+  .stage-row span.active{color:var(--white); font-weight:500;}
+  .stage-row span:first-child{text-align:left;}
+  .stage-row span:last-child{text-align:right;}
+
+  /* ===== SECTION HEADERS ===== */
+  .sec-head{margin-bottom:56px; max-width:680px;}
+  .sec-head .eyebrow{color:var(--amber-deep); margin-bottom:14px;}
+  .light .sec-head .eyebrow{color:var(--amber-deep);}
+  .dark .sec-head .eyebrow{color:var(--teal);}
+  .sec-head h2{color:var(--ink); margin-bottom:14px;}
+  .dark .sec-head h2{color:var(--white);}
+  .dark .sec-head p{color:#AEB9DC;}
+
+  .light{background:var(--white);}
+  .paper{background:var(--paper);}
+  .dark{background:var(--ink); color:var(--white);}
+
+  /* ===== CARDS ===== */
+  .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  .grid-2{display:grid; grid-template-columns:repeat(2,1fr); gap:24px;}
+  @media (max-width:880px){ .grid-3,.grid-2{grid-template-columns:1fr;} }
+
+  .card{
+    background:var(--white); border:1px solid var(--line); border-radius:14px;
+    padding:30px; box-shadow:0 10px 24px rgba(18,22,43,0.05);
+  }
+  .card-dark{background:var(--navy); border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:30px;}
+  .icon-circle{
+    width:48px; height:48px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:18px;
+  }
+  .icon-circle svg{width:22px; height:22px;}
+  .card h3{margin-bottom:10px; color:var(--ink);}
+  .card-dark h3{color:var(--white);}
+  .card p{font-size:14.5px;}
+  .card-dark p{color:#B9C3E0; font-size:14.5px;}
+
+  /* ===== GAP / STAGE FLOW ===== */
+  .stage-flow{display:flex; gap:14px; align-items:stretch; margin-bottom:18px;}
+  .stage-box{
+    flex:1; background:var(--white); border:1px solid var(--line); border-radius:12px;
+    padding:24px 18px; text-align:center; position:relative;
+  }
+  .stage-box.flag{border-color:var(--amber); border-width:2px;}
+  .stage-dot{width:14px; height:14px; border-radius:50%; margin:0 auto 14px;}
+  .stage-box h4{font-family:var(--sans); font-weight:700; font-size:15px; margin-bottom:6px;}
+  .stage-box span{font-size:12.5px; color:var(--slate);}
+  .stage-arrow{display:flex; align-items:center; color:var(--slate); font-size:16px;}
+  @media (max-width:880px){ .stage-flow{flex-direction:column;} .stage-arrow{display:none;} }
+  .threshold-note{
+    font-family:var(--mono); font-size:12.5px; color:var(--amber-deep); text-align:center;
+    border-top:2px dashed var(--amber); padding-top:10px; margin-top:4px;
+  }
+  .opportunity-bar{
+    background:var(--ink); color:var(--white); border-radius:12px; padding:26px 30px; margin-top:36px;
+    font-size:15px;
+  }
+  .opportunity-bar b{color:var(--teal);}
+
+  /* ===== PROCESS (how it works) ===== */
+  .process{display:flex; gap:18px; counter-reset:step;}
+  .process-step{flex:1; background:var(--paper); border-radius:12px; padding:26px 18px; position:relative;}
+  .process-step .num{
+    font-family:var(--mono); font-size:12px; color:var(--slate); position:absolute; top:18px; right:18px;
+  }
+  .process-step h4{font-size:15.5px; margin:14px 0 8px;}
+  .process-step p{font-size:12.5px;}
+  @media (max-width:880px){ .process{flex-direction:column;} }
+
+  /* ===== VALIDATION ===== */
+  .val-card{border-radius:14px; padding:34px;}
+  .val-proven{background:var(--navy); color:var(--white);}
+  .val-next{background:var(--paper); border:1px solid var(--line);}
+  .val-card h3{margin-bottom:18px;}
+  .val-proven h3{color:var(--white);}
+  .val-list{list-style:none; display:flex; flex-direction:column; gap:14px;}
+  .val-list li{display:flex; gap:12px; font-size:14px;}
+  .val-proven li{color:#CADCFC;}
+  .val-next li{color:var(--slate);}
+  .val-list li svg{flex-shrink:0; margin-top:2px;}
+
+  /* ===== ROADMAP ===== */
+  .roadmap{display:grid; grid-template-columns:repeat(4,1fr); gap:18px;}
+  @media (max-width:880px){ .roadmap{grid-template-columns:1fr;} }
+  .phase{background:var(--white); border:1px solid var(--line); border-radius:12px; padding:22px; box-shadow:0 8px 20px rgba(18,22,43,0.05);}
+  .phase .tag{
+    display:inline-block; font-family:var(--mono); font-size:11.5px; letter-spacing:0.04em;
+    background:var(--teal-soft); color:var(--teal-deep); padding:5px 10px; border-radius:6px; margin-bottom:14px;
+  }
+  .phase.final .tag{background:var(--amber-soft); color:var(--amber-deep);}
+  .phase h4{font-size:15px; margin-bottom:8px;}
+  .phase p{font-size:12.5px;}
+
+  /* ===== TABLE ===== */
+  table{width:100%; border-collapse:collapse; font-size:14px;}
+  thead th{background:var(--ink); color:var(--white); text-align:left; padding:14px 16px; font-weight:600;}
+  tbody td{padding:14px 16px; border-bottom:1px solid var(--line); color:var(--ink);}
+  tbody tr:last-child td{font-weight:600;}
+  tbody tr:last-child{background:var(--teal-soft);}
+  .pos{color:var(--teal-deep); font-weight:600;}
+
+  /* ===== ASK / CTA ===== */
+  .ask-list{list-style:none; display:flex; flex-direction:column; gap:16px; margin:32px 0 40px;}
+  .ask-list li{display:flex; gap:14px; font-size:15px; color:#CADCFC; align-items:flex-start;}
+  .ask-list li svg{flex-shrink:0; margin-top:3px;}
+
+  footer{background:var(--ink); color:#7E8FB8; padding:40px 0; font-size:13px; border-top:1px solid rgba(255,255,255,0.06);}
+  footer .wrap{display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;}
+  footer a{color:var(--teal);}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <div class="nav-logo">ThermoSense</div>
+    <div class="nav-links">
+      <a href="#problem">Problem</a>
+      <a href="#solution">Solution</a>
+      <a href="#validation">Validation</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#ask">Get in touch</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">ACIC-BMU × BOSCH PROPEL</div>
+    <h1>Catch the drift,<br>before it catches fire.</h1>
+    <p class="lede">ThermoSense is a low-cost thermal safety intelligence system for two-wheeler EVs — tracking how a motor's own physics quietly change, so degradation gets caught while it's still just drift, not damage.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-primary" href="#problem">See the problem</a>
+      <a class="btn btn-ghost" href="#ask">Get in touch</a>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-head">
+        <span class="label">Tracked coefficient · live window estimate</span>
+        <span class="metric" id="liveMetric">k = 4.06e-05</span>
+      </div>
+      <svg id="driftSvg" viewBox="0 0 800 220" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="driftGradient" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#0EA5A4"/>
+            <stop offset="55%" stop-color="#0EA5A4"/>
+            <stop offset="78%" stop-color="#F2994A"/>
+            <stop offset="100%" stop-color="#F2994A"/>
+          </linearGradient>
+        </defs>
+        <line x1="0" y1="60" x2="800" y2="60" stroke="#F2994A" stroke-width="1.4" stroke-dasharray="5 6" opacity="0.65"/>
+        <text x="800" y="50" text-anchor="end" font-family="IBM Plex Mono" font-size="10.5" fill="#C9701F">FAULT THRESHOLD</text>
+        <path id="driftPath" fill="none" stroke="url(#driftGradient)" stroke-width="2.6" stroke-linecap="round"/>
+        <circle id="driftDot" r="5" fill="#FFFFFF" stroke="#0EA5A4" stroke-width="2"/>
+      </svg>
+      <div class="stage-row">
+        <span id="stage-healthy">HEALTHY</span>
+        <span id="stage-drift">DRIFTING</span>
+        <span id="stage-incipient">INCIPIENT FAULT</span>
+        <span id="stage-failure">ALERT</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== PROBLEM ===================== -->
+<section class="light" id="problem">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">The problem</div>
+      <h2>Two-wheeler EVs fail thermally — and current diagnostics see it too late</h2>
+      <p>Most thermal incidents are preceded by gradual, detectable degradation, not sudden failure. The diagnostics in use today aren't built to see that stage.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="icon-circle" style="background:var(--amber-soft)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#C9701F" stroke-width="2"><path d="M12 2v6M12 22v-6M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M2 12h6M16 12h6M4.93 19.07l4.24-4.24M14.83 9.17l4.24-4.24"/></svg>
+        </div>
+        <h3>Signal methods see symptoms, not causes</h3>
+        <p>Motor Current Signature Analysis flags faults from current harmonics — but typically only once they're already pronounced.</p>
+      </div>
+      <div class="card">
+        <div class="icon-circle" style="background:var(--amber-soft)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#C9701F" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        </div>
+        <h3>Model-based methods assume fixed dynamics</h3>
+        <p>Most diagnostic models assume a motor behaves the same way across its lifetime. In practice, it doesn't.</p>
+      </div>
+      <div class="card">
+        <div class="icon-circle" style="background:var(--amber-soft)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#C9701F" stroke-width="2"><path d="M3 17l6-6 4 4 8-8"/></svg>
+        </div>
+        <h3>Aging, load, and heat shift the dynamics</h3>
+        <p>Aging, changing load, and thermal stress continuously change the underlying system before a full failure occurs — and nothing tracks that drift.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== THE GAP ===================== -->
+<section class="paper">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">The gap</div>
+      <h2>Nobody is tracking how the motor's own dynamics drift over time</h2>
+    </div>
+    <div class="stage-flow">
+      <div class="stage-box"><div class="stage-dot" style="background:#0EA5A4"></div><h4>Healthy</h4><span>Stable parameters</span></div>
+      <div class="stage-arrow">→</div>
+      <div class="stage-box"><div class="stage-dot" style="background:#5BB8B6"></div><h4>Drifting</h4><span>Aging, load, heat shift dynamics</span></div>
+      <div class="stage-arrow">→</div>
+      <div class="stage-box flag"><div class="stage-dot" style="background:#F2994A"></div><h4>Incipient fault</h4><span>Early deviation — currently invisible</span></div>
+      <div class="stage-arrow">→</div>
+      <div class="stage-box"><div class="stage-dot" style="background:#C9701F"></div><h4>Failure</h4><span>Thermal event / breakdown</span></div>
+    </div>
+    <div class="opportunity-bar">
+      <b>The opportunity:</b> track interpretable model coefficients as they evolve, and catch the drift stage — well before failure.
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SOLUTION ===================== -->
+<section class="dark" id="solution">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Our solution</div>
+      <h2>An adaptive, physics-interpretable early-warning framework</h2>
+    </div>
+    <div class="grid-3">
+      <div class="card-dark">
+        <div class="icon-circle" style="background:var(--teal-soft)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0B7F7E" stroke-width="2"><path d="M3 17l5-5 4 4 8-9"/></svg>
+        </div>
+        <h3>Adaptive system identification</h3>
+        <p>Sliding-window identification continuously re-estimates the motor's governing coefficients from live signals, instead of assuming they're fixed.</p>
+      </div>
+      <div class="card-dark">
+        <div class="icon-circle" style="background:var(--teal-soft)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0B7F7E" stroke-width="2"><path d="M2 12h4l2 7 4-14 3 10 2-3h5"/></svg>
+        </div>
+        <h3>Signal-based cross-validation</h3>
+        <p>Motor Current Signature Analysis runs alongside, validating physical-model findings against current-harmonic evidence.</p>
+      </div>
+      <div class="card-dark">
+        <div class="icon-circle" style="background:var(--teal-soft)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0B7F7E" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6l8-4z"/></svg>
+        </div>
+        <h3>Early, interpretable alerts</h3>
+        <p>Each tracked coefficient maps to a real physical quantity — an alert tells you which mechanism is degrading, not just that something is.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== HOW IT WORKS ===================== -->
+<section class="light">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">How it works</div>
+      <h2>From raw motor signals to an interpretable early-warning signal</h2>
+    </div>
+    <div class="process">
+      <div class="process-step"><span class="num">01</span><h4>Sense</h4><p>Current & voltage sampled from the motor drive.</p></div>
+      <div class="process-step"><span class="num">02</span><h4>Window</h4><p>Sliding-window segments of live operating data.</p></div>
+      <div class="process-step"><span class="num">03</span><h4>Identify</h4><p>Adaptive identification re-estimates coefficients per window.</p></div>
+      <div class="process-step"><span class="num">04</span><h4>Cross-check</h4><p>MCSA signal features validate the physical-model findings.</p></div>
+      <div class="process-step"><span class="num">05</span><h4>Alert</h4><p>Deviation from healthy baseline triggers an early, labeled warning.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== VALIDATION ===================== -->
+<section class="paper" id="validation">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Validation to date</div>
+      <h2>The core method is proven; the EV motor application is the next step</h2>
+    </div>
+    <div class="grid-2">
+      <div class="val-card val-proven">
+        <h3>Proven on a benchmark hybrid hydraulic fault-isolation testbed</h3>
+        <ul class="val-list">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0EA5A4" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Multiple fault types — leak, actuator degradation, valve fouling — isolated from coefficient drift alone</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0EA5A4" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Coefficients recovered to within ~2% of true values under realistic noise</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0EA5A4" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Switchable-component faults isolate with high confidence — genuine signature separation, not just detection</li>
+        </ul>
+      </div>
+      <div class="val-card val-next">
+        <h3 style="color:var(--ink)">What the Propel program funds</h3>
+        <ul class="val-list">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9701F" stroke-width="2.5"><path d="M12 9v4M12 17h.01M10.3 3.9L2.7 17a2 2 0 001.7 3h15.2a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>Re-deriving the motor-specific physical model — electrical and thermal coupling</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9701F" stroke-width="2.5"><path d="M12 9v4M12 17h.01M10.3 3.9L2.7 17a2 2 0 001.7 3h15.2a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>Collecting real two-wheeler motor data across aging, load, and thermal conditions</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9701F" stroke-width="2.5"><path d="M12 9v4M12 17h.01M10.3 3.9L2.7 17a2 2 0 001.7 3h15.2a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>Integrating MCSA cross-validation and building the low-cost sensing prototype</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ROADMAP ===================== -->
+<section class="light" id="roadmap">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">16-week roadmap</div>
+      <h2>From validated method to working EV motor prototype</h2>
+    </div>
+    <div class="roadmap">
+      <div class="phase"><span class="tag">WEEKS 1–4</span><h4>Model &amp; data</h4><p>Derive the motor-specific physical model; define fault classes with an EV-motor domain partner; begin data collection planning.</p></div>
+      <div class="phase"><span class="tag">WEEKS 5–8</span><h4>Adapt the framework</h4><p>Port the adaptive identification pipeline to motor dynamics; establish healthy-baseline coefficient behavior.</p></div>
+      <div class="phase"><span class="tag">WEEKS 9–12</span><h4>Integrate &amp; test</h4><p>Add MCSA cross-validation; run controlled fault-injection tests on a motor test rig.</p></div>
+      <div class="phase final"><span class="tag">WEEKS 13–16</span><h4>Prototype &amp; pilot prep</h4><p>Package as a low-cost sensing/firmware prototype; prepare a pilot with an OEM or fleet partner.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COMPETITIVE LANDSCAPE ===================== -->
+<section class="paper">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Competitive landscape</div>
+      <h2>Where existing approaches stop, ThermoSense continues</h2>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Approach</th><th>Detects gradual drift?</th><th>Physically interpretable?</th><th>Low-cost / retrofit-friendly?</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>BMS thermal sensors</td><td>No — threshold-based</td><td>Partial</td><td>Yes</td></tr>
+        <tr><td>MCSA (signal-only)</td><td>Limited — needs pronounced fault</td><td>No — black-box features</td><td>Yes</td></tr>
+        <tr><td>Vibration-based prognostics</td><td>Partial</td><td>No — statistical features</td><td>No — added hardware</td></tr>
+        <tr><td>Fixed-model diagnostics</td><td>No — assumes stationary dynamics</td><td>Yes</td><td>Yes</td></tr>
+        <tr><td>ThermoSense (adaptive + MCSA)</td><td class="pos">Yes — designed for it</td><td class="pos">Yes</td><td class="pos">Yes — existing sensors</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===================== ASK ===================== -->
+<section class="dark" id="ask">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">What we're asking for</div>
+      <h2 style="color:var(--white)">Help us take this from validated method to road-ready prototype</h2>
+    </div>
+    <ul class="ask-list">
+      <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0EA5A4" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Program funding to support the 16-week motor-domain adaptation and prototyping plan</li>
+      <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0EA5A4" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Access to EV motor test rigs and fault-injection facilities for controlled validation</li>
+      <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0EA5A4" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Mentorship connecting our diagnostic methodology to Bosch's automotive safety and manufacturing expertise</li>
+      <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0EA5A4" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Introductions to potential two-wheeler OEM or fleet pilot partners</li>
+    </ul>
+    <a class="btn btn-primary" href="mailto:your-email@example.com">Get in touch</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>ThermoSense — ACIC-BMU × Bosch Propel</div>
+    <div>Contact: <a href="mailto:your-email@example.com">your-email@example.com</a></div>
+  </div>
+</footer>
+
+<script>
+// Build the signature hero visual: a coefficient trace that's flat/healthy,
+// then drifts with growing amplitude, crosses the fault threshold, and spikes —
+// looping continuously, with a moving dot and synced stage labels.
+(function(){
+  const svg = document.getElementById('driftSvg');
+  const path = document.getElementById('driftPath');
+  const dot = document.getElementById('driftDot');
+  const W = 800, H = 220, BASE = 150;
+  const N = 160;
+  let points = [];
+
+  for (let i = 0; i <= N; i++){
+    const x = (i / N) * W;
+    const t = i / N;
+    let y = BASE;
+    if (t > 0.45){
+      const p = (t - 0.45) / 0.55;
+      const amp = Math.pow(p, 1.6) * 90;
+      const freq = 14 + p * 10;
+      y = BASE - amp * 0.5 + Math.sin(p * freq) * amp;
+    } else {
+      y += Math.sin(t * 40) * 3;
+    }
+    if (t > 0.93){
+      y = BASE - 95 - (t - 0.93) * 300;
+    }
+    y = Math.max(20, Math.min(195, y));
+    points.push([x, y]);
+  }
+
+  const d = points.map((p, i) => (i === 0 ? 'M' : 'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+  path.setAttribute('d', d);
+
+  const totalLen = path.getTotalLength();
+  const DURATION = 7000; // ms per loop
+  let start = null;
+
+  const stages = [
+    document.getElementById('stage-healthy'),
+    document.getElementById('stage-drift'),
+    document.getElementById('stage-incipient'),
+    document.getElementById('stage-failure')
+  ];
+  const metric = document.getElementById('liveMetric');
+  const baseVal = 4.06e-5;
+
+  function setActiveStage(t){
+    let idx = 0;
+    if (t > 0.93) idx = 3;
+    else if (t > 0.62) idx = 2;
+    else if (t > 0.45) idx = 1;
+    stages.forEach((el, i) => el.classList.toggle('active', i === idx));
+  }
+
+  function frame(ts){
+    if (!start) start = ts;
+    let elapsed = (ts - start) % DURATION;
+    const t = elapsed / DURATION;
+    const len = t * totalLen;
+    const pt = path.getPointAtLength(len);
+    dot.setAttribute('cx', pt.x);
+    dot.setAttribute('cy', pt.y);
+    setActiveStage(t);
+
+    let coeff = baseVal;
+    if (t > 0.45){
+      const p = (t - 0.45) / 0.55;
+      coeff = baseVal * (1 + Math.sin(p * 14) * p * 0.6);
+    }
+    metric.textContent = 'k = ' + coeff.toExponential(2);
+
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+
+</body>
+</html>
